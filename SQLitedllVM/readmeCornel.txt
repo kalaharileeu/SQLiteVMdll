@@ -10,8 +10,6 @@ that installed all my packages for me
 -ran "dotnet ef migrations add InitialCreate" from CMD
 -ran "dotnet ef database update" from CMD
 
-
-
 C:\Users\cdelange\Documents\Visual Studio 2017\ProjectsCore\APICoreABC\SqliteDBuser>dotnet ef migrations add InitialCreate
 
 this sort of worked form this website:

@@ -17,44 +17,52 @@ namespace SQLitedllVM.Migrations
 
             modelBuilder.Entity("SQLitedllVM.Models.Point", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("JodId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("UserdetailUsername");
+                    b.Property<string>("Description")
+                        .HasMaxLength(100);
 
-                    b.Property<int>("X");
+                    b.Property<string>("Invoicenumber");
 
-                    b.Property<int>("Y");
+                    b.Property<string>("Jobname")
+                        .IsRequired();
 
-                    b.HasKey("Id");
+                    b.Property<bool>("Signedoff");
 
-                    b.HasIndex("UserdetailUsername");
+                    b.Property<int?>("Usernumber");
 
-                    b.ToTable("Data");
+                    b.HasKey("JodId");
+
+                    b.HasIndex("Usernumber");
+
+                    b.ToTable("UserPoints");
                 });
 
             modelBuilder.Entity("SQLitedllVM.Models.Userdetail", b =>
                 {
-                    b.Property<string>("Username")
+                    b.Property<int>("Usernumber")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BusinessName");
+                    b.Property<string>("BusinessName")
+                        .HasMaxLength(12);
 
-                    b.Property<string>("ContactNumber");
+                    b.Property<string>("ContactNumber")
+                        .HasMaxLength(16);
 
-                    b.Property<string>("Password")
-                        .HasMaxLength(15);
+                    b.Property<string>("Username")
+                        .HasMaxLength(12);
 
-                    b.HasKey("Username");
+                    b.HasKey("Usernumber");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SQLitedllVM.Models.Point", b =>
                 {
-                    b.HasOne("SQLitedllVM.Models.Userdetail")
+                    b.HasOne("SQLitedllVM.Models.Userdetail", "Userdetail")
                         .WithMany("Data")
-                        .HasForeignKey("UserdetailUsername");
+                        .HasForeignKey("Usernumber");
                 });
         }
     }

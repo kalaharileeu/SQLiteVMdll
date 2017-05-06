@@ -1,31 +1,24 @@
 ﻿using System;
 //Right clicked on Dependencies and added the ref to the dll project
-using SQLitedllVM.Models;
+using SQLitedllVM.Repo;
 using System.Linq;
 
 namespace TestRunSQLiteVM
 {
     class Program
     {
+        //Do some database seeding for some tests
         static void Main()
         {
-            using (var db = new UserContext())
+            using (var userRepo = new UserRepo())
             {
-                db.Users.Add(new Userdetail { Username = "Susan", Password = "1234567" });
-                db.Users.Add(new Userdetail { Username = "Rick", Password = "7654321" });
-                //Add a new data poitn to last entered user
-                //(db.Users.Last()).Data.Add(new Point { Id = "something" });
-                var count = db.SaveChanges();
-                (db.Users.Last()).Data.Add(new Point { Id = "something" });
-                Console.WriteLine("{0} records saved to database", count);
+                userRepo.Add(new SQLitedllVM.Models.Userdetail { BusinessName = "Happy hour", Usernumber = 34523, ContactNumber = "0312354", Username="MadMonkeys"});
 
+                  //(userRepo.).Data.Add(new Point { JodId = 12 });
+                  foreach(var v in userRepo.GetAll())
+                    Console.WriteLine($"Username: {v.Usernumber}");
                 Console.WriteLine();
-                Console.WriteLine("All blogs in database:");
                 //iterate throught the users
-                foreach (var user in db.Users)
-                {
-                    Console.WriteLine(" - {0}", user.Username);
-                }
             }
             Console.ReadLine();
         }
