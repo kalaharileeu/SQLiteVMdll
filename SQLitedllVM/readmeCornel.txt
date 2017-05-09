@@ -9,6 +9,8 @@ What did I do here:
 that installed all my packages for me
 -ran "dotnet ef migrations add InitialCreate" from CMD
 -ran "dotnet ef database update" from CMD
+---If any update issues deleted the old migration files--
+---I also deleted the old .db in the bin\debug\blah blah file to create the new, had to, complain---
 
 C:\Users\cdelange\Documents\Visual Studio 2017\ProjectsCore\APICoreABC\SqliteDBuser>dotnet ef migrations add InitialCreate
 

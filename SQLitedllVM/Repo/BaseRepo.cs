@@ -28,45 +28,25 @@ namespace SQLitedllVM.Repo
         /// <returns></returns>
         public T GetOne(int? id) => Table.Find(id);
 
-        public async Task<T> GetOneAsync(int? id) => await Table.FindAsync(id);
+        //public async Task<T> GetOneAsync(int? id) => await Table.FindAsync(id);
 
         public List<T> GetAll() => Table.ToList();
 
-        public Task<List<T>> GetAllAsync() => Table.ToListAsync();
+        //public Task<List<T>> GetAllAsync() => Table.ToListAsync();
 
         public int Add(T entity)
         {
             Table.Add(entity);
+
             return SaveChanges();
         }
 
-        public async Task<int> AddAsync(T entity)
-        {
-            Table.Add(entity);
-            return await SaveChangesAsync();
-        }
+ 
 
         public int AddRange(IList<T> entities)
         {
             Table.AddRange(entities);
             return SaveChanges();
-        }
-        public Task<int> AddRangeAsync(IList<T> entities)
-        {
-            Table.AddRange(entities);
-            return SaveChangesAsync();
-        }
-
-        public int AddRange(IEnumerable<T> entities)
-        {
-            Table.AddRange(entities);
-            return SaveChanges();
-        }
-
-        public Task<int> AddRangeAsync(IEnumerable<T> entities)
-        {
-            Table.AddRange(entities);
-            return SaveChangesAsync();
         }
 
 
@@ -76,11 +56,7 @@ namespace SQLitedllVM.Repo
             return SaveChanges();
         }
 
-        public async Task<int> SaveAsync(T entity)
-        {
-            Context.Entry(entity).State = EntityState.Modified;
-            return await SaveChangesAsync();
-        }
+
         //This changes the entity state to delete.
         //There is another way of deleting, slower:
         //  Locate record in DbSet<T>, by calling Find()
@@ -92,12 +68,7 @@ namespace SQLitedllVM.Repo
             return SaveChanges();
         }
 
-        public async Task<int> DeleteAsync(T entity)
-        {
-            Context.Entry(entity).State = EntityState.Deleted;
-            return await SaveChangesAsync();
-        }
-            /// <summary>
+        /// <summary>
         /// Wrappers for SaveChangesAsync in DbContext
         /// </summary>
         internal int SaveChanges()
@@ -111,40 +82,6 @@ namespace SQLitedllVM.Repo
                 //Thrown when there is a concurrency error
                 //If Entries propery is null, no records were modified
                 //entities in Entries threw error due to timestamp/conncurrency
-                //for now, just rethrow the exception
-                Debug.WriteLine(ex.Message);
-                throw;
-            }
-            catch (DbUpdateException ex)
-            {
-                //Thrown when database update fails
-                //Examine the inner exception(s) for additional 
-                //details and affected objects
-                //for now, just rethrow the exception
-                Debug.WriteLine(ex.Message);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                //some other exception happened and should be handled
-                Debug.WriteLine(ex.Message);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Wrappers for SaveChangesAsync in DbContext
-        /// </summary>
-        /// <returns></returns>
-        internal async Task<int> SaveChangesAsync()
-        {
-            try
-            {
-                return await Context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                //Thrown when there is a concurrency error
                 //for now, just rethrow the exception
                 Debug.WriteLine(ex.Message);
                 throw;
@@ -186,12 +123,78 @@ namespace SQLitedllVM.Repo
                 //Wrap
                 Context.Dispose();
                 // Free any managed objects here. 
-                //
             }
 
             // Free any unmanaged objects here. 
             //
             _disposed = true;
         }
+        //public async Task<int> SaveAsync(T entity)
+        //{
+        //    Context.Entry(entity).State = EntityState.Modified;
+        //    return await SaveChangesAsync();
+        //}
+
+        //public async Task<int> DeleteAsync(T entity)
+        //{
+        //    Context.Entry(entity).State = EntityState.Deleted;
+        //    return await SaveChangesAsync();
+        //}
+
+        /// <summary>
+        /// Wrappers for SaveChangesAsync in DbContext
+        /// </summary>
+        /// <returns></returns>
+        //internal async Task<int> SaveChangesAsync()
+        //{
+        //    try
+        //    {
+        //        return await Context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException ex)
+        //    {
+        //        //Thrown when there is a concurrency error
+        //        //for now, just rethrow the exception
+        //        Debug.WriteLine(ex.Message);
+        //        throw;
+        //    }
+        //    catch (DbUpdateException ex)
+        //    {
+        //        //Thrown when database update fails
+        //        //Examine the inner exception(s) for additional 
+        //        //details and affected objects
+        //        //for now, just rethrow the exception
+        //        Debug.WriteLine(ex.Message);
+        //        throw;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //some other exception happened and should be handled
+        //        Debug.WriteLine(ex.Message);
+        //        throw;
+        //    }
+        //}
+        //public Task<int> AddRangeAsync(IList<T> entities)
+        //{
+        //    Table.AddRange(entities);
+        //    return SaveChangesAsync();
+        //}
+
+        //public int AddRange(IEnumerable<T> entities)
+        //{
+        //    Table.AddRange(entities);
+        //    return SaveChanges();
+        //}
+
+        //public Task<int> AddRangeAsync(IEnumerable<T> entities)
+        //{
+        //    Table.AddRange(entities);
+        //    return SaveChangesAsync();
+        //}
+        //public async Task<int> AddAsync(T entity)
+        //{
+        //    Table.Add(entity);
+        //    return await SaveChangesAsync();
+        //}
     }
 }

@@ -5,17 +5,18 @@ using System.Net.Http;
 
 namespace SQLitedllVM.Models
 {
-    public class Userdetail
+   // [Table("Users")]
+    public class User
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Usernumber { get; set; }
+        public int UsernumberID { get; set; }
         [StringLength(12, MinimumLength = 2)]
         public string Username { get; set; }
         [StringLength(12)]
         public string BusinessName { get; set; }
         [StringLength(16)]
         public string ContactNumber { get; set; }
-        public virtual ICollection<Point> Data { get; set; } = new HashSet<Point>();
+        public List<Point> Data { get; set; }
         //Setting up backing fields here
         private string _validatedClientUrl;//Backing Fields(EF6Core)
         public string Url
@@ -34,6 +35,5 @@ namespace SQLitedllVM.Models
             _validatedClientUrl = url;
         }
     }
-
 
 }

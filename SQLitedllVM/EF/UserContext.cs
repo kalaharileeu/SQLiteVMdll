@@ -6,12 +6,21 @@ namespace SQLitedllVM.Models
     public class UserContext : DbContext
     {
 		
-        public DbSet<Userdetail> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Point> UserPoints { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=userpoints.db");
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasMany(b => b.Data)
+                .WithOne()
+                .HasForeignKey(p => p.UserForeignKey);
         }
     }
 }
