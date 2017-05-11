@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using SQLitedllVM.Models;
-using System.Diagnostics;
+﻿using SQLitedllVM.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace SQLitedllVM.Repo
 {
@@ -11,10 +9,10 @@ namespace SQLitedllVM.Repo
         public UserRepo()
         {
             Table = Context.Users;
-            Context.ChangeTracker.AutoDetectChangesEnabled = false;
+            //Context.ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
-        public void removeUserByID(int id)
+        public void DeleteUserByID(int id)
         {
             User findTR = GetOne(id);
             if (findTR == null)
@@ -22,36 +20,86 @@ namespace SQLitedllVM.Repo
             else
             {
                 //Remove value form repo
-                Context.Users.Remove(findTR);
-                Context.SaveChanges();
+                Table.Remove(findTR);
+                SaveChanges();
+            }
+            //Now remove all the Points with that FK user Id
+            using (var prepo = new PointRepo())
+            {
+                var listOfPoints = prepo.GetPointsByFK(findTR.UsernumberID);
+                if (listOfPoints == null) return;
+                foreach(var point in listOfPoints)
+                    prepo.DeletePointsByID(point.PointId);//Delete the points
             }
         }
 
         public int Delete(int id)
         {
             var toRemove = Context.Entry(new User { UsernumberID = id /*, Timestamp = timeStamp*/ });
-
-            Debug.WriteLine(toRemove.State);
             if (toRemove.State == EntityState.Detached)
             {
                 Table.Add(toRemove.Entity);
             }
-            Debug.WriteLine(toRemove.State);
             toRemove.State = EntityState.Added;
 
             return SaveChanges();
         }
 
-
         //"new" hides the base class the calls it later
         public new int Add(User newUser)
         {
+            //Check it the user name is there first, if is, the return 
+            if (GetUserIdbyName(newUser.Username) != null) return -1;
             //If the user is already there return a default value
             if(GetOne(newUser.UsernumberID) == null)
                 return base.Add(newUser);
-            return default(int);
+            return -1;
         }
 
+        /// <summary>
+        /// Because it is SQLite I have to do most the foreign key management
+        /// myself
+        /// </summary>
+        /// <param name="newPoint"></param>
+        /// <returns></returns>
+        public int Add(Point newPoint)
+        {
+            //Does the Point idFK exist as a User id
+            if (GetOne(newPoint.UserIDFK) == null)return -1;
+            using (var pointrepo = new PointRepo())
+            {
+                if (pointrepo.Add(newPoint) == -1)
+                    return -1;
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Return all the data for a user id the 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public User GetUserAndData(int id)
+        {
+            var tempuser = GetOne(id);
+            if (tempuser == null) return null;
+
+            using (var pointrepo = new PointRepo())
+            {
+                tempuser.Data = pointrepo.GetPointsByFK(tempuser.UsernumberID);
+            }
+            return tempuser;
+        }
+        /// <summary>
+        /// Get the First USer with the username found.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public User GetUserIdbyName(string username)
+        {
+            return Table.FirstOrDefault(x => x.Username == username);
+        }
+       
         ///// <summary>
         ///// Reomove a Userdetail by id, the Point data will also be removed
         ///// </summary>

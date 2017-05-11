@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SQLitedllVM.Repo
 {
@@ -18,8 +17,12 @@ namespace SQLitedllVM.Repo
     /// </summary>
     public abstract class BaseRepo<T> : IDisposable where T : class, new()
     {
-        public UserContext Context { get; } = new UserContext();
-        //the actions start wirh Db<set> property of the context
+
+        //UserContext is in the EF folder
+        //Context get created when a new specialised repo gets instantiated
+        protected UserContext Context { get; } = new UserContext();
+        //The derived Class instantiates this: Table  = Context.Users for example
+        //the DbSet<User> lives in UserContext class
         protected DbSet<T> Table;
         /// <summary>
         /// Most of the below are wrappers for DbSet or DbContext
@@ -40,8 +43,6 @@ namespace SQLitedllVM.Repo
 
             return SaveChanges();
         }
-
- 
 
         public int AddRange(IList<T> entities)
         {
@@ -93,7 +94,7 @@ namespace SQLitedllVM.Repo
                 //details and affected objects
                 //for now, just rethrow the exception
                 Debug.WriteLine(ex.Message);
-                throw;
+               throw;
             }
             catch (Exception ex)
             {

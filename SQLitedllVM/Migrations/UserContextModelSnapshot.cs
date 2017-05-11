@@ -30,15 +30,13 @@ namespace SQLitedllVM.Migrations
 
                     b.Property<bool>("Signedoff");
 
-                    b.Property<int>("UserForeignKey");
+                    b.Property<int>("UserIDFK");
 
-                    b.Property<int?>("UsernumberID1");
+                    b.Property<int?>("UsernumberID");
 
                     b.HasKey("PointId");
 
-                    b.HasIndex("UserForeignKey");
-
-                    b.HasIndex("UsernumberID1");
+                    b.HasIndex("UsernumberID");
 
                     b.ToTable("UserPoints");
                 });
@@ -66,12 +64,7 @@ namespace SQLitedllVM.Migrations
                 {
                     b.HasOne("SQLitedllVM.Models.User")
                         .WithMany("Data")
-                        .HasForeignKey("UserForeignKey")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SQLitedllVM.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UsernumberID1");
+                        .HasForeignKey("UsernumberID");
                 });
         }
     }

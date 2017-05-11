@@ -62,3 +62,9 @@ in the project file like so:
   </PropertyGroup>
   as described here:
   https://github.com/aspnet/EntityFramework/issues/7889
+
+
+                      b.HasOne("SQLitedllVM.Models.User")
+                        .WithMany("Data")
+                        .HasForeignKey("UsernumberID")
+                        .OnDelete(DeleteBehavior.Cascade);

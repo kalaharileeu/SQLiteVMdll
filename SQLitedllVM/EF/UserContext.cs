@@ -12,15 +12,17 @@ namespace SQLitedllVM.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=userpoints.db");
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasMany(b => b.Data)
-                .WithOne()
-                .HasForeignKey(p => p.UserForeignKey);
+            //This fluent model creation did not work.
+            // Cornel added this
+            //modelBuilder.Entity<User>()
+            //    .HasMany(b => b.Data)
+            //    .WithOne()
+            //    .HasForeignKey("UsernumberID")
+            //    .OnDelete(Microsoft.EntityFrameworkCore.Metadata.DeleteBehavior.Cascade);
         }
     }
 }

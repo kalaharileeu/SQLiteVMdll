@@ -15,11 +15,11 @@ namespace SQLitedllVM.Models
         public bool Signedoff { get; set; }
         [StringLength(100)]
         public string Description { get; set; }
+        //The whole foreign key and EFCore/SQlite is a bit messy
+        //Doing it manually
+        public int UserIDFK { get; set; }
         ////annotation to indicate which properties serve as the 
         ////backing fields for the two navigation properties
-        public int UserForeignKey { get; set; }
-        public User User { get; set; }
-        //Setting up backing fields here
         private string _validatedJobUrl;//Backing Fields(EF6Core)
         public string Url
         {

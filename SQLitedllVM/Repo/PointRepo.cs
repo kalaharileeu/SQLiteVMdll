@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SQLitedllVM.Models;
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SQLitedllVM.Repo
 {
@@ -12,10 +10,10 @@ namespace SQLitedllVM.Repo
         public PointRepo()
         {
             Table = Context.UserPoints;
-            Context.ChangeTracker.AutoDetectChangesEnabled = false;
+            //Context.ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
-        public void removePointsByID(int id)
+        public void DeletePointsByID(int id)
         {
             Point findTR = GetOne(id);
             if (findTR == null)
@@ -28,15 +26,23 @@ namespace SQLitedllVM.Repo
             }
         }
 
+        public List<Point> GetPointsByFK(int userID)
+        {
+            //Find all the points if any
+            var points = Table.Where(x => x.UserIDFK == userID);
+            //if the count is 0, reutrn null
+            if(points.Count() == 0) return null;
+            //else return the list
+            return points.ToList();
+        }
+
         public int Delete(int id)
         {
             var toRemove = Context.Entry(new Point { PointId = id /*, Timestamp = timeStamp*/ });
-            Debug.WriteLine(toRemove.State);
             if (toRemove.State == EntityState.Detached)
             {
                 Table.Add(toRemove.Entity);
             }
-            Debug.WriteLine(toRemove.State);
             toRemove.State = EntityState.Added;
 
             return SaveChanges();
@@ -45,10 +51,12 @@ namespace SQLitedllVM.Repo
         //"new" hides the base class the calls it later
         public new int Add(Point datapoint)
         {
-            //If the user is already there return a default value
+            //if the name is null the return -1
+            if (datapoint.Pointname == null) return -1;
+            //If the Point is already there return a default value
             if (GetOne(datapoint.PointId) == null)
                 return base.Add(datapoint);
-            return default(int);
+            return -1;
         }
         //public Task<int> DeleteAsync(int id)
         //{
