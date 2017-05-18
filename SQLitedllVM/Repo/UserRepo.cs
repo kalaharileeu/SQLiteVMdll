@@ -11,7 +11,10 @@ namespace SQLitedllVM.Repo
             Table = Context.Users;
             //Context.ChangeTracker.AutoDetectChangesEnabled = false;
         }
-
+        /// <summary>
+        /// Delete the user and all it data points
+        /// </summary>
+        /// <param name="id"></param>
         public void DeleteUserByID(int id)
         {
             User findTR = GetOne(id);
@@ -30,6 +33,22 @@ namespace SQLitedllVM.Repo
                 if (listOfPoints == null) return;
                 foreach(var point in listOfPoints)
                     prepo.DeletePointsByID(point.PointId);//Delete the points
+            }
+        }
+        /// <summary>
+        /// Delete only one data point from a user
+        /// </summary>
+        /// <param name="id"></param>
+        public void DeleteOneUserPoint(int iduser, int idpointid)
+        {
+            User findTR = GetOne(iduser);
+            if (findTR == null)
+                return;
+
+            //Now remove all the Points with that FK user Id
+            using (var prepo = new PointRepo())
+            {
+                prepo.DeletePointsByID(idpointid);//Delete the points
             }
         }
 
