@@ -28,8 +28,15 @@ namespace SQLitedllVM.Models
         {
             using (var client = new HttpClient())
             {
-                var response = client.GetAsync(url).Result;
-                response.EnsureSuccessStatusCode();
+                try
+                {
+                    var response = client.GetAsync(url).Result;
+                    response.EnsureSuccessStatusCode();
+                }
+                catch
+                {
+                    _validatedClientUrl = "";
+                }
             }
 
             _validatedClientUrl = url;

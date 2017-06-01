@@ -29,11 +29,11 @@ namespace SQLitedllVM.Repo
         public List<Point> GetPointsByFK(int userID)
         {
             //Find all the points if any
-            var points = Table.Where(x => x.UserIDFK == userID);
+            var points = Table.Where(x => x.UserIDFK == userID).ToList();
             //if the count is 0, reutrn null
             if(points.Count() == 0) return null;
             //else return the list
-            return points.ToList();
+            return points;
         }
 
         public int Delete(int id)

@@ -64,6 +64,26 @@ namespace SQLitedllVM.Repo
             return SaveChanges();
         }
 
+        //Update, to update I delete the old user and add the new user
+        public int Update(User oldUpdated)
+        {
+            //The user is not there cannot update it 
+            if (GetUserIdbyName(oldUpdated.Username) == null) return -1;
+            //Get the old user
+            User old = GetOne(oldUpdated.UsernumberID);
+            if (old != null)
+            {
+                old.BusinessName = oldUpdated.BusinessName;
+                old.ContactNumber = oldUpdated.ContactNumber;
+                //if(oldUpdated.Url != "")old.SetUrl(oldUpdated.Url);
+                old.Username = oldUpdated.Username;
+                old.UsernumberID = oldUpdated.UsernumberID;
+                base.SaveChanges();
+                return 0;
+            }
+            return -1;
+        }
+
         //"new" hides the base class the calls it later
         public new int Add(User newUser)
         {
@@ -86,11 +106,7 @@ namespace SQLitedllVM.Repo
             //Does the Point idFK exist as a User id
             if (GetOne(newPoint.UserIDFK) == null)return -1;
             using (var pointrepo = new PointRepo())
-            {
-                if (pointrepo.Add(newPoint) == -1)
-                    return -1;
-            }
-            return -1;
+                return pointrepo.Add(newPoint);
         }
 
         /// <summary>

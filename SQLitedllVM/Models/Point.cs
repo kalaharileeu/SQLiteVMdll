@@ -16,7 +16,7 @@ namespace SQLitedllVM.Models
         public bool Signedoff { get; set; }
         [StringLength(100)]
         public string Description { get; set; }
-        public DateTime Date { get; set; }
+        //public DateTime Date { get; set; }
         //The whole foreign key and EFCore/SQlite is a bit messy
         //Doing it manually
         public int UserIDFK { get; set; }
