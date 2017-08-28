@@ -47,7 +47,6 @@ The current stable tooling for EF Core migrations is split into two packages.
      Microsoft.EntityFrameworkCore.Tools is for PowerShell
     Microsoft.EntityFrameworkCore.Tools.DotNet is for the CLI (dotnet commands)
 Be sure you’ve referenced the Tools.DotNet version of the package so that you have access to the CLI commands. 
-If you’re following my course, that’s explained.
 dotnet ef only works in .NET Core projects. If your project targets the full .NET framework, then you’ll need to
 use the PowerShell commands e.g. add-migration, update-database.
 Make sure that you are running the command from the folder that contains the project where the Tools package is
